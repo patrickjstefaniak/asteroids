@@ -19,13 +19,14 @@ public:
     ship();
     ship(vec2 pos);
     
-    void draw();
-    void move(KeyEvent event);
-    void update();
-    void shoot();
-    void hit(list<Shape2d>);
-    void die();
-    void constructBody();
+    void        draw();
+    void        move(KeyEvent event);
+    void        update();
+    void        shoot();
+    void        hit(list<Shape2d>);
+    void        die();
+    void        constructBody();
+    list<vec2>  getBullets();
     
     //forward is normalized vec of way ship is pointing
     vec2            velocity, forward , center ;

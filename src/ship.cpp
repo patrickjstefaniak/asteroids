@@ -147,3 +147,12 @@ void ship::constructBody()
     body.lineTo(center - (perp * size / 3.0f));
     body.close();
 }
+
+list<vec2> ship::getBullets()
+{
+    list<vec2> r;
+    for(bullet &b: bullets){
+        r.push_back(b.pos);
+    }
+    return r;
+}
