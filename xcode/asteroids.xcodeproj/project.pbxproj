@@ -17,7 +17,9 @@
 		00B9955A1B128DF400A5C623 /* IOKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995581B128DF400A5C623 /* IOKit.framework */; };
 		00B9955B1B128DF400A5C623 /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 00B995591B128DF400A5C623 /* IOSurface.framework */; };
 		171F4ADCD985420D93077106 /* asteroidsApp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = A7954BCAD5604A09BB60630B /* asteroidsApp.cpp */; };
+		4A2DD5641D07133C00C24291 /* bullet.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4A2DD5631D07133C00C24291 /* bullet.cpp */; };
 		4ACE51DF1D00A8CA00066506 /* ship.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4ACE51DE1D00A8CA00066506 /* ship.cpp */; };
+		4AE5C7CE1D073F8400EB7525 /* asteroids.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 4AE5C7CD1D073F8400EB7525 /* asteroids.cpp */; };
 		5323E6B20EAFCA74003A9687 /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5323E6B10EAFCA74003A9687 /* CoreVideo.framework */; };
 		56D69D5CAE5F4FB9B29B68A6 /* CinderApp.icns in Resources */ = {isa = PBXBuildFile; fileRef = BF7DEA61A0974F0C82B5989F /* CinderApp.icns */; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -36,8 +38,12 @@
 		1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = /System/Library/Frameworks/Cocoa.framework; sourceTree = "<absolute>"; };
 		29B97324FDCFA39411CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		29B97325FDCFA39411CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		4A2DD5631D07133C00C24291 /* bullet.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = bullet.cpp; path = ../src/bullet.cpp; sourceTree = "<group>"; };
+		4A2DD5651D07145300C24291 /* bullet.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = bullet.h; path = ../src/bullet.h; sourceTree = "<group>"; };
 		4ACE51DE1D00A8CA00066506 /* ship.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = ship.cpp; path = ../src/ship.cpp; sourceTree = "<group>"; };
 		4ACE51E01D00A8E400066506 /* ship.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = ship.h; path = ../src/ship.h; sourceTree = "<group>"; };
+		4AE5C7CD1D073F8400EB7525 /* asteroids.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = asteroids.cpp; path = ../src/asteroids.cpp; sourceTree = "<group>"; };
+		4AE5C7CF1D073F9900EB7525 /* asteroids.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = asteroids.h; path = ../src/asteroids.h; sourceTree = "<group>"; };
 		5323E6B10EAFCA74003A9687 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = /System/Library/Frameworks/CoreVideo.framework; sourceTree = "<absolute>"; };
 		6CA762D2D71D4DB28B0BDF7A /* asteroids_Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = "\"\""; path = asteroids_Prefix.pch; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* asteroids.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = asteroids.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -81,6 +87,8 @@
 			children = (
 				A7954BCAD5604A09BB60630B /* asteroidsApp.cpp */,
 				4ACE51DE1D00A8CA00066506 /* ship.cpp */,
+				4A2DD5631D07133C00C24291 /* bullet.cpp */,
+				4AE5C7CD1D073F8400EB7525 /* asteroids.cpp */,
 			);
 			name = Source;
 			sourceTree = "<group>";
@@ -139,6 +147,8 @@
 				D50939B64EEB423C8D658763 /* Resources.h */,
 				6CA762D2D71D4DB28B0BDF7A /* asteroids_Prefix.pch */,
 				4ACE51E01D00A8E400066506 /* ship.h */,
+				4A2DD5651D07145300C24291 /* bullet.h */,
+				4AE5C7CF1D073F9900EB7525 /* asteroids.h */,
 			);
 			name = Headers;
 			sourceTree = "<group>";
@@ -224,7 +234,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				4AE5C7CE1D073F8400EB7525 /* asteroids.cpp in Sources */,
 				171F4ADCD985420D93077106 /* asteroidsApp.cpp in Sources */,
+				4A2DD5641D07133C00C24291 /* bullet.cpp in Sources */,
 				4ACE51DF1D00A8CA00066506 /* ship.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

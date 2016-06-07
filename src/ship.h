@@ -6,6 +6,8 @@
 //
 //
 
+#include "bullet.h"
+
 using namespace ci;
 using namespace ci::app;
 using namespace std;
@@ -21,12 +23,14 @@ public:
     void move(KeyEvent event);
     void update();
     void shoot();
+    void hit(list<Shape2d>);
     void die();
     void constructBody();
     
     //forward is normalized vec of way ship is pointing
-    vec2    velocity, forward , center ;
-    Path2d body;
-    float   drag, turning, forwardMotion, size;
-    int     lives, score;
+    vec2            velocity, forward , center ;
+    Path2d          body;
+    float           drag, turning, forwardMotion, size;
+    int             lives, score;
+    list<bullet>    bullets;
 };

@@ -12,7 +12,7 @@ ship::ship()
 {
     forward = vec2(0,-1);
     drag = 1.009;
-    lives = 3;
+    lives = 1;
     center = getWindowCenter();
     velocity = vec2(0);
     turning = 0;
@@ -20,6 +20,7 @@ ship::ship()
     forwardMotion = 0;
     size = 15;
     score = 0;
+    bullets.push_back(bullet(forward, center));
 }
 
 ship::ship(vec2 pos)
@@ -31,6 +32,9 @@ void ship::draw()
 {
     gl::color(1,1,1);
     gl::draw(body);
+    for(bullet b: bullets){
+        b.draw();
+    }
 }
 
 void ship::move(KeyEvent event)
@@ -53,7 +57,7 @@ void ship::move(KeyEvent event)
             break;
             
         case KeyEvent::KEY_SPACE:
-            //shoot
+            shoot();
             break;
             
         default:
@@ -96,11 +100,33 @@ void ship::update()
     }
     constructBody();
     
+    for(list<bullet>::iterator b = bullets.begin() ; b != bullets.end();){
+        b->update();
+        if(! b->isAlive){
+            auto deleting = b;
+            ++b;
+            bullets.erase(deleting);
+        }else{
+            ++b;
+        }
+    }
 }
 
 void ship::shoot()
 {
-    
+    bullet b = bullet(forward, center);
+    bullets.push_back(b);
+}
+
+void ship::hit(list<Shape2d> asteroids){
+    for(Shape2d &a: asteroids){
+        for(vec2 &p: body.getPoints()){
+            if(a.contains(p)){
+                die();
+            }
+        }
+            
+    }
 }
 
 void ship::die()
@@ -108,6 +134,7 @@ void ship::die()
     lives -= 1;
     if(lives <= 0){
         //ship deaaad
+        cout << " dead ";
     }
 }
 
