@@ -18,6 +18,8 @@ asteroid::asteroid(vec2 c, bool big){
 
 void asteroid::update(){
     center += direction;
+    
+    //screen wrap around
     if(center.x < 0){
         center.x = getWindowWidth();
     }else if(center.x > getWindowWidth()){

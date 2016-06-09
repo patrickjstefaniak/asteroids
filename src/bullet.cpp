@@ -22,6 +22,7 @@ bullet::bullet(ship &s){
     shotFrom = &s;
     direction = s.forward;
     pos = s.center;
+    //length of bullets travel without hitting anything 
     lifeSpan = 60;
     isAlive = true;
 }

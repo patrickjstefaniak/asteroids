@@ -63,21 +63,29 @@ void ship::update()
     forward = forward * mat2(cos(turning), -sin(turning), sin(turning), cos(turning));
     forward = normalize(forward);
     turning = 0;
+    
+    
     //adjust acceleration
     vec2 newVel = forwardMotion * forward;
     forwardMotion = 0;
+    
     
     //limit max speed
     if(length(velocity) > 3){
         vec2 velDir = normalize(velocity);
         velocity = velDir * 3.0f;
     }
+    
+    
+    //apply current velocity and drag
     velocity += newVel;
     if(length(velocity) > 0){
         velocity = velocity / drag;
     }
+    
     //adjust position
     center += velocity;
+    
     
     //check to see if off screen, wrap to other side
     if(center.x < 0){
@@ -90,6 +98,7 @@ void ship::update()
     }else if(center.y > getWindowHeight() + (size / 2)){
         center.y = 0;
     }
+    
     constructBody();
 }
 
@@ -97,11 +106,12 @@ void ship::update()
 
 void ship::hit(){
     score += 100;
-    cout << "ship score " << score;
 }
 
 void ship::die()
 {
+    //period after restarting so that ship doesnt start on
+    //top of asteroid or get immediately hit by one
     if(invincible <= 0){
         center = getWindowCenter();
         lives -= 1;
@@ -115,6 +125,7 @@ void ship::die()
 
 void ship::constructBody()
 {
+    //build ship shape based on center position and forward direction
     body.clear();
     body.moveTo(center + (forward * size));
     vec2 perp = mat2(0, -1, 1, 0) * forward;

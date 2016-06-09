@@ -127,11 +127,14 @@ void asteroidsApp::keyUp(KeyEvent event){
 void asteroidsApp::update()
 {
     if(!startScreen && !gameOver){
+        //to prevent from being able to hold down button and create lots of bullets
         if(bulletDelay > 0){
             bulletDelay --;
         }
     
         p1.move(buttonsDown);
+        
+        
         if(buttonsDown[4] && bulletDelay <= 0){
             bullet b = bullet(p1);
             bullets.push_back(b);
@@ -139,6 +142,7 @@ void asteroidsApp::update()
         }else if(!buttonsDown[4]){
             bulletDelay = 0;
         }
+        
         p1.update();
         ac.shipPos = getShipsPos();
     
