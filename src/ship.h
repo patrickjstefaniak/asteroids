@@ -29,5 +29,5 @@ public:
     vec2            velocity, forward , center ;
     Path2d          body;
     float           drag, turning, forwardMotion, size;
-    int             lives, score;
+    int             lives, score, invincible;
 };

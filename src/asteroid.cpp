@@ -50,12 +50,13 @@ void asteroid::updateBody(){
         body = b;
     }else{
         Shape2d b;
-        b.moveTo(center + vec2(-2 , -4));
-        b.lineTo(center + vec2(2  , -5));
-        b.lineTo(center + vec2(4  , -1));
-        b.lineTo(center + vec2(2  , 1));
-        b.lineTo(center + vec2(3  , 4));
-        b.lineTo(center + vec2(-4  , 3));
+        b.moveTo(center + vec2(-4 , -8));
+        b.lineTo(center + vec2(4  , -10));
+        b.lineTo(center + vec2(8  , -2));
+        b.lineTo(center + vec2(4  , 2));
+        b.lineTo(center + vec2(6  , 8));
+        b.lineTo(center + vec2(-8 , 6));
+        b.lineTo(center + vec2(-10 , 1));
         b.close();
         body = b;
     }

@@ -25,8 +25,8 @@ class asteroidsApp : public App {
     vector<ship>    ships;
     list<bullet>    bullets;
     asteroidControl ac;
-    TextBox         scoreBoard;
-    bool            buttonsDown[5];
+    TextBox         scoreBoard, title, spaceContinue;
+    bool            buttonsDown[5], gameOver, startScreen;
     int             bulletDelay;
 };
 
@@ -34,13 +34,17 @@ void asteroidsApp::setup()
 {
     setWindowSize(800, 600);
     p1 = ship();
-    ac = asteroidControl(getShipsPos());
     ships.push_back(p1);
+    ac = asteroidControl(getShipsPos());
+    spaceContinue = TextBox().font(Font("Courier" , 30)).size(vec2(getWindowWidth(), 50)).alignment(TextBox::CENTER);
     scoreBoard = TextBox().font(Font("Courier", 20)).size(vec2(getWindowWidth()/4, 50));
+    title = TextBox().font(Font("Courier", 70)).size(vec2(getWindowWidth(),100)).alignment(TextBox::CENTER);
     for(bool &b: buttonsDown){
         b = false;
     }
     bulletDelay = 0;
+    startScreen = true;
+    gameOver = false;
 }
 
 void asteroidsApp::mouseDown( MouseEvent event )
@@ -103,6 +107,16 @@ void asteroidsApp::keyUp(KeyEvent event){
             
         case KeyEvent::KEY_SPACE:
             buttonsDown[4] = false;
+            if(startScreen){
+                startScreen = false;
+            }else if(gameOver){
+                gameOver = false;
+                startScreen = true;
+                ships.clear();
+                p1 = ship();
+                ships.push_back(p1);
+                ac = asteroidControl(getShipsPos());
+            }
             break;
             
         default:
@@ -112,48 +126,51 @@ void asteroidsApp::keyUp(KeyEvent event){
 
 void asteroidsApp::update()
 {
-    if(bulletDelay > 0){
-        bulletDelay --;
-    }
+    if(!startScreen && !gameOver){
+        if(bulletDelay > 0){
+            bulletDelay --;
+        }
     
-    p1.move(buttonsDown);
-    if(buttonsDown[4] && bulletDelay <= 0){
-        bullet b = bullet(p1);
-        bullets.push_back(b);
-        bulletDelay = 50;
-    }else if(!buttonsDown[4]){
-        bulletDelay = 0;
-    }
-    p1.update();
-    ac.shipPos = getShipsPos();
+        p1.move(buttonsDown);
+        if(buttonsDown[4] && bulletDelay <= 0){
+            bullet b = bullet(p1);
+            bullets.push_back(b);
+            bulletDelay = 50;
+        }else if(!buttonsDown[4]){
+            bulletDelay = 0;
+        }
+        p1.update();
+        ac.shipPos = getShipsPos();
     
-    //see if any asteroids were hit
-    //ac.update returns list of asteroids hit by bullets
-    //and list of ships hit by asteroids respectively
-    auto hits = ac.update(getShipsPos(), getBulletsPos());
-    for(vec2 &h : hits.front()){
-        for(bullet &b: bullets){
-            if(b.pos == h){
-                b.hit();
+        //see if any asteroids were hit
+        //ac.update returns list of asteroids hit by bullets
+        //and list of ships hit by asteroids respectively
+        auto hits = ac.update(getShipsPos(), getBulletsPos());
+        for(vec2 &h : hits.front()){
+            for(bullet &b: bullets){
+                if(b.pos == h){
+                    b.hit();
+                }
             }
         }
-    }
-    //see if ship is hit
-    for(vec2 &h : hits.back()){
-        if(p1.body.contains(h)){
+        //see if ship is hit
+        for(vec2 &h : hits.back()){
+            if(p1.lives == 0){
+                gameOver = true;
+            }
             p1.die();
         }
-    }
     
-    //update bullets
-    for(list<bullet>::iterator b = bullets.begin(); b!=bullets.end();){
-        b->update();
-        if(!b->isAlive){
-            auto c = b;
-            ++b;
-            bullets.erase(c);
-        }else{
-            ++b;
+        //update bullets
+        for(list<bullet>::iterator b = bullets.begin(); b!=bullets.end();){
+            b->update();
+            if(!b->isAlive){
+                auto c = b;
+                ++b;
+                bullets.erase(c);
+            }else{
+                ++b;
+            }
         }
     }
 }
@@ -174,6 +191,26 @@ void asteroidsApp::draw()
     scoreBoard.text("score: " + to_string(p1.score)).alignment(TextBox::RIGHT);
     gl::draw(gl::Texture2d::create(scoreBoard.render()));
     gl::popMatrices();
+    if(startScreen){
+        title.text("a s t e r o i d s");
+        gl::pushMatrices();
+        gl::translate(vec2(0,getWindowHeight()/3 + 50));
+        gl::draw(gl::Texture2d::create(title.render()));
+        gl::translate(vec2(0,100));
+        spaceContinue.text("----press space to continue----");
+        gl::draw(gl::Texture2d::create(spaceContinue.render()));
+        gl::popMatrices();
+    }
+    if(gameOver){
+        title.text("g a m e   o v e r");
+        gl::pushMatrices();
+        gl::translate(vec2(0,getWindowHeight()/3 + 50));
+        gl::draw(gl::Texture2d::create(title.render()));
+        gl::translate(vec2(0,100));
+        spaceContinue.text("----press space to continue----");
+        gl::draw(gl::Texture2d::create(spaceContinue.render()));
+        gl::popMatrices();
+    }
 }
 
 list<vec2> asteroidsApp::getShipsPos(){

@@ -20,6 +20,7 @@ ship::ship()
     forwardMotion = 0;
     size = 15;
     score = 0;
+    invincible = 50;
 }
 
 ship::ship(vec2 pos)
@@ -30,6 +31,9 @@ ship::ship(vec2 pos)
 void ship::draw()
 {
     gl::color(1,1,1);
+    if(invincible > 0){
+        gl::color(.5,.5,.5);
+    }
     gl::draw(body);
 }
 
@@ -52,6 +56,9 @@ void ship::move(bool buttons[])
 
 void ship::update()
 {
+    if(invincible > 0){
+        invincible --;
+    }
     //turn ship
     forward = forward * mat2(cos(turning), -sin(turning), sin(turning), cos(turning));
     forward = normalize(forward);
@@ -95,10 +102,14 @@ void ship::hit(){
 
 void ship::die()
 {
-    lives -= 1;
-    if(lives <= 0){
-        //ship deaaad
-        cout << " dead ";
+    if(invincible <= 0){
+        center = getWindowCenter();
+        lives -= 1;
+        invincible = 150;
+        if(lives < 0){
+            score = 0;
+            lives = 5;
+        }
     }
 }
 

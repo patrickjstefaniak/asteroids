@@ -21,9 +21,10 @@ void asteroidControl::draw(){
     }
 }
 
-//returns list of positions of bullets that hit asteroids
+//returns list of positions of bullets that hit asteroids and list of ship points that were hit by asteroid
 vector<list<vec2>> asteroidControl::update(list<vec2> s, list<vec2> bullets){
     list<vec2> hits;
+    list<vec2> shipHits;
     shipPos = s;
     for(asteroid &a: mAsteroids){
         a.update();
@@ -34,10 +35,19 @@ vector<list<vec2>> asteroidControl::update(list<vec2> s, list<vec2> bullets){
                 cout << " hit! at " << b;
             }
         }
+        for(vec2 &shipPoint: s){
+            if(a.body.contains(shipPoint)){
+                shipHits.push_back(shipPoint);
+            }
+        }
     }
     
     for(list<asteroid>::iterator a = mAsteroids.begin() ; a != mAsteroids.end();){
         if(a->isHit){
+            if(a->isBig){
+                mAsteroids.push_back(asteroid(a->center, false));
+                mAsteroids.push_back(asteroid(a->center, false));
+            }
             auto deleting = a;
             ++a;
             mAsteroids.erase(deleting);
@@ -49,12 +59,9 @@ vector<list<vec2>> asteroidControl::update(list<vec2> s, list<vec2> bullets){
         createAsteroids(5);
     }
     
-    //see if any ships were hit
-    //make a list of those
-    
     vector<list<vec2>> shipsBullets;
     shipsBullets.push_back(hits);
-    shipsBullets.push_back(hits);
+    shipsBullets.push_back(shipHits);
     return shipsBullets;
 }
 
