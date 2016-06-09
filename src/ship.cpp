@@ -20,7 +20,8 @@ ship::ship()
     forwardMotion = 0;
     size = 15;
     score = 0;
-    bullets.push_back(bullet(forward, center));
+    mBullet =  bullet(forward, center);
+    mBullet.die();
 }
 
 ship::ship(vec2 pos)
@@ -32,9 +33,7 @@ void ship::draw()
 {
     gl::color(1,1,1);
     gl::draw(body);
-    for(bullet b: bullets){
-        b.draw();
-    }
+    mBullet.draw();
 }
 
 void ship::move(KeyEvent event)
@@ -99,23 +98,19 @@ void ship::update()
         center.y = 0;
     }
     constructBody();
-    
-    for(list<bullet>::iterator b = bullets.begin() ; b != bullets.end();){
-        b->update();
-        if(! b->isAlive){
-            auto deleting = b;
-            ++b;
-            bullets.erase(deleting);
-        }else{
-            ++b;
-        }
+    mBullet.update();
+    if(! mBullet.isAlive){
+        mBullet.die();
     }
 }
 
 void ship::shoot()
 {
-    bullet b = bullet(forward, center);
-    bullets.push_back(b);
+    //why doesnt this work ?
+    //it works for actually creating a new bullet which draws to the screen
+    //but when i try to see where the bullet is it tells me its the initial one
+    
+    mBullet = bullet(forward, center);
 }
 
 void ship::hit(list<Shape2d> asteroids){
@@ -148,11 +143,9 @@ void ship::constructBody()
     body.close();
 }
 
-list<vec2> ship::getBullets()
+vec2 ship::getBullets()
 {
-    list<vec2> r;
-    for(bullet &b: bullets){
-        r.push_back(b.pos);
-    }
-    return r;
+    cout << mBullet.pos;
+    return mBullet.pos;
 }
+

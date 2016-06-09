@@ -29,11 +29,12 @@ void asteroidsApp::setup()
     setWindowSize(800, 600);
     p1 = ship();
     ac = asteroidControl(getShipsPos());
+    ships.push_back(p1);
 }
 
 void asteroidsApp::mouseDown( MouseEvent event )
 {
-    cout << p1.center << "   ";
+    //cout << p1.center << "   ";
 }
 
 void asteroidsApp::keyDown(KeyEvent event)
@@ -63,9 +64,8 @@ list<vec2> asteroidsApp::getShipsPos(){
 list<vec2> asteroidsApp::getBulletsPos(){
     list<vec2> b;
     for(ship &s: ships){
-        for(vec2 &v: s.getBullets()){
-            b.push_back(v);
-        }
+        b.push_back(s.getBullets());
+        //cout << s.getBullets();
     }
     return b;
 }

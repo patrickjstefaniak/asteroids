@@ -28,7 +28,7 @@ void asteroidControl::update(list<vec2> s, list<vec2> bullets){
         for(vec2 &b: bullets){
             if(a.body.contains(b)){
                 a.isHit = true;
-                cout << " hit! ";
+                cout << " hit! at " << b;
             }
         }
     }

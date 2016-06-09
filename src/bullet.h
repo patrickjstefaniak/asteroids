@@ -19,6 +19,7 @@ public:
     
     void update();
     void draw();
+    void die();
     
     vec2    pos, direction;
     int     lifeSpan;

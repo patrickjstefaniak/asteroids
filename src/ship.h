@@ -26,12 +26,12 @@ public:
     void        hit(list<Shape2d>);
     void        die();
     void        constructBody();
-    list<vec2>  getBullets();
+    vec2        getBullets();
     
     //forward is normalized vec of way ship is pointing
     vec2            velocity, forward , center ;
     Path2d          body;
     float           drag, turning, forwardMotion, size;
     int             lives, score;
-    list<bullet>    bullets;
+    bullet          mBullet;
 };
