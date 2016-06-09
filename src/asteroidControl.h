@@ -20,7 +20,7 @@ public:
     asteroidControl(list<vec2> s);
     
     void draw();
-    void update(list<vec2> s, list<vec2> bullets);
+    vector<list<vec2>> update(list<vec2> s, list<vec2> bullets);
     void createAsteroids(int num);
     
     list<asteroid> mAsteroids;

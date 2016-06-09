@@ -18,6 +18,14 @@ bullet::bullet(vec2 dir, vec2 p){
     isAlive = true;
 }
 
+bullet::bullet(ship &s){
+    shotFrom = &s;
+    direction = s.forward;
+    pos = s.center;
+    lifeSpan = 60;
+    isAlive = true;
+}
+
 void bullet::draw(){
     gl::color(1,1,1);
     gl::drawSolidRect(Rectf(pos-vec2(2), pos+vec2(2)));
@@ -43,7 +51,9 @@ void bullet::update(){
     }
 }
 
-void bullet::die(){
+void bullet::hit(){
+    //move off screen until removed 
     pos = vec2(100000);
+    shotFrom->hit();
     isAlive = false;
 }

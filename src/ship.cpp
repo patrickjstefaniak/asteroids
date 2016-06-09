@@ -12,7 +12,7 @@ ship::ship()
 {
     forward = vec2(0,-1);
     drag = 1.009;
-    lives = 1;
+    lives = 5;
     center = getWindowCenter();
     velocity = vec2(0);
     turning = 0;
@@ -20,8 +20,6 @@ ship::ship()
     forwardMotion = 0;
     size = 15;
     score = 0;
-    mBullet =  bullet(forward, center);
-    mBullet.die();
 }
 
 ship::ship(vec2 pos)
@@ -33,35 +31,23 @@ void ship::draw()
 {
     gl::color(1,1,1);
     gl::draw(body);
-    mBullet.draw();
 }
 
-void ship::move(KeyEvent event)
+void ship::move(bool buttons[])
 {
-    switch (event.getCode()) {
-        case KeyEvent::KEY_RIGHT:
-            turning += 0.1f;
-            break;
-            
-        case KeyEvent::KEY_LEFT:
-            turning -= 0.1f;
-            break;
-            
-        case KeyEvent::KEY_UP:
-            forwardMotion += 0.8f;
-            break;
-            
-        case KeyEvent::KEY_DOWN:
-            forwardMotion -= 0.8f;
-            break;
-            
-        case KeyEvent::KEY_SPACE:
-            shoot();
-            break;
-            
-        default:
-            break;
+    if(buttons[0]){
+        turning += 0.1f;
     }
+    if(buttons[1]){
+        turning -= 0.1f;
+    }
+    if(buttons[2]){
+        forwardMotion += 0.8f;
+    }
+    if(buttons[3]){
+        forwardMotion -= 0.8f;
+    }
+    
 }
 
 void ship::update()
@@ -98,30 +84,13 @@ void ship::update()
         center.y = 0;
     }
     constructBody();
-    mBullet.update();
-    if(! mBullet.isAlive){
-        mBullet.die();
-    }
 }
 
-void ship::shoot()
-{
-    //why doesnt this work ?
-    //it works for actually creating a new bullet which draws to the screen
-    //but when i try to see where the bullet is it tells me its the initial one
-    
-    mBullet = bullet(forward, center);
-}
 
-void ship::hit(list<Shape2d> asteroids){
-    for(Shape2d &a: asteroids){
-        for(vec2 &p: body.getPoints()){
-            if(a.contains(p)){
-                die();
-            }
-        }
-            
-    }
+
+void ship::hit(){
+    score += 100;
+    cout << "ship score " << score;
 }
 
 void ship::die()
@@ -143,9 +112,5 @@ void ship::constructBody()
     body.close();
 }
 
-vec2 ship::getBullets()
-{
-    cout << mBullet.pos;
-    return mBullet.pos;
-}
+
 
