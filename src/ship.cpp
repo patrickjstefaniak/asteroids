@@ -40,16 +40,16 @@ void ship::draw()
 void ship::move(bool buttons[])
 {
     if(buttons[0]){
-        turning += 0.1f;
+        turning += 0.05f;
     }
     if(buttons[1]){
-        turning -= 0.1f;
+        turning -= 0.05f;
     }
     if(buttons[2]){
-        forwardMotion += 0.8f;
+        forwardMotion += 0.3f;
     }
     if(buttons[3]){
-        forwardMotion -= 0.8f;
+        forwardMotion -= 0.3f;
     }
     
 }
@@ -115,6 +115,8 @@ void ship::die()
     if(invincible <= 0){
         center = getWindowCenter();
         lives -= 1;
+        velocity = vec2(0);
+        forward = vec2(0,-1);
         invincible = 150;
         if(lives < 0){
             score = 0;

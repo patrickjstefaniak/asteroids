@@ -162,6 +162,10 @@ void asteroidsApp::update()
             if(p1.lives == 0){
                 gameOver = true;
             }
+            //a not very effective way of stopping ship from moving after respawning
+            for(bool &button: buttonsDown){
+                button = false;
+            }
             p1.die();
         }
     
