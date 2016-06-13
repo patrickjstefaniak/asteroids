@@ -17,25 +17,23 @@ class asteroidsApp : public App {
     void keyUp(KeyEvent event) override;
 	void update() override;
 	void draw() override;
+    void drawInterface();
     
     list<vec2> getShipsPos();
     list<vec2> getBulletsPos();
     
-    ship            p1;
-    vector<ship>    ships;
+    ship            ships[4];
     list<bullet>    bullets;
     asteroidControl ac;
     TextBox         scoreBoard, title, spaceContinue;
     bool            gameOver, startScreen;
     bool            buttonsDown[4][5];
-    int             bulletDelay, menuDelay, numPlayers;
+    int             menuDelay, numPlayers;
 };
 
 void asteroidsApp::setup()
 {
     setWindowSize(800, 600);
-    p1 = ship();
-    ships.push_back(p1);
     ac = asteroidControl(getShipsPos());
     spaceContinue = TextBox().font(Font("Courier" , 30)).size(vec2(getWindowWidth(), 50)).alignment(TextBox::CENTER);
     scoreBoard = TextBox().font(Font("Courier", 20)).size(vec2(getWindowWidth()/4, 50));
@@ -45,7 +43,6 @@ void asteroidsApp::setup()
             buttonsDown[x][y] = false;
         }
     }
-    bulletDelay = 0;
     menuDelay = 0;
     startScreen = true;
     gameOver = false;
@@ -57,95 +54,100 @@ void asteroidsApp::mouseDown( MouseEvent event )
     //cout << p1.center << "   ";
 }
 
-//keys:
-//0 = right
-//1 = left
-//2 = up
-//3 = down
-//4 = space
+//keys:  p1   p2  p3  p4
+//0 = right | d | h | l
+//1 = left  | a | f | j
+//2 = up    | w | t | i
+//3 = down  | s | g | k
+//4 = space | e | y | o
 
 void asteroidsApp::keyDown(KeyEvent event)
 {
     switch (event.getCode()) {
+            //p1
         case KeyEvent::KEY_RIGHT:
-            buttonsDown[0] = true;
+            buttonsDown[0][0] = true;
             break;
             
         case KeyEvent::KEY_LEFT:
-            buttonsDown[1] = true;
+            buttonsDown[0][1] = true;
             break;
             
         case KeyEvent::KEY_UP:
-            buttonsDown[2] = true;
+            buttonsDown[0][2] = true;
             break;
             
         case KeyEvent::KEY_DOWN:
-            buttonsDown[3] = true;
+            buttonsDown[0][3] = true;
             break;
             
         case KeyEvent::KEY_SPACE:
-            buttonsDown[4] = true;
+            buttonsDown[0][4] = true;
             break;
             
+            //p2
         case KeyEvent::KEY_d:
-            buttonsDown[0] = true;
+            buttonsDown[1][0] = true;
             break;
             
         case KeyEvent::KEY_a:
-            buttonsDown[1] = true;
+            buttonsDown[1][1] = true;
             break;
             
         case KeyEvent::KEY_w:
-            buttonsDown[2] = true;
+            buttonsDown[1][2] = true;
             break;
             
         case KeyEvent::KEY_s:
-            buttonsDown[3] = true;
+            buttonsDown[1][3] = true;
             break;
             
         case KeyEvent::KEY_e:
-            buttonsDown[4] = true;
+            buttonsDown[1][4] = true;
             break;
             
-        case KeyEvent::KEY_RIGHT:
-            buttonsDown[0] = true;
+            //p3
+        case KeyEvent::KEY_h:
+            buttonsDown[2][0] = true;
             break;
             
-        case KeyEvent::KEY_LEFT:
-            buttonsDown[1] = true;
+        case KeyEvent::KEY_f:
+            buttonsDown[2][1] = true;
             break;
             
-        case KeyEvent::KEY_UP:
-            buttonsDown[2] = true;
+        case KeyEvent::KEY_t:
+            buttonsDown[2][2] = true;
             break;
             
-        case KeyEvent::KEY_DOWN:
-            buttonsDown[3] = true;
+        case KeyEvent::KEY_g:
+            buttonsDown[2][3] = true;
             break;
             
-        case KeyEvent::KEY_SPACE:
-            buttonsDown[4] = true;
+        case KeyEvent::KEY_y:
+            buttonsDown[2][4] = true;
             break;
             
-        case KeyEvent::KEY_RIGHT:
-            buttonsDown[0] = true;
+            //p4
+        case KeyEvent::KEY_l:
+            buttonsDown[3][0] = true;
             break;
             
-        case KeyEvent::KEY_LEFT:
-            buttonsDown[1] = true;
+        case KeyEvent::KEY_j:
+            buttonsDown[3][1] = true;
             break;
             
-        case KeyEvent::KEY_UP:
-            buttonsDown[2] = true;
+        case KeyEvent::KEY_i:
+            buttonsDown[3][2] = true;
             break;
             
-        case KeyEvent::KEY_DOWN:
-            buttonsDown[3] = true;
+        case KeyEvent::KEY_k:
+            buttonsDown[3][3] = true;
             break;
             
-        case KeyEvent::KEY_SPACE:
-            buttonsDown[4] = true;
+        case KeyEvent::KEY_o:
+            buttonsDown[3][4] = true;
             break;
+            
             
         default:
             break;
@@ -154,24 +156,88 @@ void asteroidsApp::keyDown(KeyEvent event)
 
 void asteroidsApp::keyUp(KeyEvent event){
     switch (event.getCode()) {
+            //p1
         case KeyEvent::KEY_RIGHT:
-            buttonsDown[0] = false;
+            buttonsDown[0][0] = false;
             break;
             
         case KeyEvent::KEY_LEFT:
-            buttonsDown[1] = false;
+            buttonsDown[0][1] = false;
             break;
             
         case KeyEvent::KEY_UP:
-            buttonsDown[2] = false;
+            buttonsDown[0][2] = false;
             break;
             
         case KeyEvent::KEY_DOWN:
-            buttonsDown[3] = false;
+            buttonsDown[0][3] = false;
             break;
             
         case KeyEvent::KEY_SPACE:
-            buttonsDown[4] = false;
+            buttonsDown[0][4] = false;
+            break;
+            
+            //p2
+        case KeyEvent::KEY_d:
+            buttonsDown[1][0] = false;
+            break;
+            
+        case KeyEvent::KEY_a:
+            buttonsDown[1][1] = false;
+            break;
+            
+        case KeyEvent::KEY_w:
+            buttonsDown[1][2] = false;
+            break;
+            
+        case KeyEvent::KEY_s:
+            buttonsDown[1][3] = false;
+            break;
+            
+        case KeyEvent::KEY_e:
+            buttonsDown[1][4] = false;
+            break;
+            
+            //p3
+        case KeyEvent::KEY_h:
+            buttonsDown[2][0] = false;
+            break;
+            
+        case KeyEvent::KEY_f:
+            buttonsDown[2][1] = false;
+            break;
+            
+        case KeyEvent::KEY_t:
+            buttonsDown[2][2] = false;
+            break;
+            
+        case KeyEvent::KEY_g:
+            buttonsDown[2][3] = false;
+            break;
+            
+        case KeyEvent::KEY_y:
+            buttonsDown[2][4] = false;
+            break;
+            
+            //p4
+        case KeyEvent::KEY_l:
+            buttonsDown[3][0] = false;
+            break;
+            
+        case KeyEvent::KEY_j:
+            buttonsDown[3][1] = false;
+            break;
+            
+        case KeyEvent::KEY_i:
+            buttonsDown[3][2] = false;
+            break;
+            
+        case KeyEvent::KEY_k:
+            buttonsDown[3][3] = false;
+            break;
+            
+        case KeyEvent::KEY_o:
+            buttonsDown[3][4] = false;
             break;
             
         default:
@@ -182,23 +248,30 @@ void asteroidsApp::keyUp(KeyEvent event){
 void asteroidsApp::update()
 {
     if(!startScreen && !gameOver){
-        //to prevent from being able to hold down button and create lots of bullets
-        if(bulletDelay > 0){
-            bulletDelay --;
-        }
+        
     
-        p1.move(buttonsDown);
-        
-        
-        if(buttonsDown[4] && bulletDelay <= 0){
-            bullet b = bullet(p1);
-            bullets.push_back(b);
-            bulletDelay = 50;
-        }else if(!buttonsDown[4]){
-            bulletDelay = 0;
+        for(int i = 0; i < numPlayers; i++){
+            ships[i].move(buttonsDown[i]);
         }
         
-        p1.update();
+        //bulletDelay to prevent from being able to hold down button and create lots of bullets
+        for(int i = 0; i < numPlayers; i++){
+            if(ships[i].bulletDelay < 0){
+                ships[i].bulletDelay --;
+            }
+            if(buttonsDown[i][0] && ships[i].bulletDelay <= 0){
+                bullet b = bullet(ships[i]);
+                bullets.push_back(b);
+                ships[i].bulletDelay = 50;
+            }else if(!buttonsDown[i][4]){
+                ships[i].bulletDelay = 0;
+            }
+        }
+        
+        
+        for(int i = 0; i < numPlayers; i++){
+            ships[i].update();
+        }
         ac.shipPos = getShipsPos();
     
         //see if any asteroids were hit
@@ -214,18 +287,22 @@ void asteroidsApp::update()
         }
         //see if ship is hit by asteroid
         for(vec2 &h : hits.back()){
-            if(p1.invincible <= 0){
-                if(p1.lives == 0){
-                    gameOver = true;
-                    menuDelay = 100;
+            for(int i = 0; i < numPlayers; i++){
+                if(ships[i].invincible <= 0 && ships[i].body.contains(h)){
+                    if(ships[i].lives == 0){
+                        ships[i].isActive = false;
+                        //see if game over
+                        if(!ships[0].isActive && !ships[1].isActive && !ships[2].isActive && !ships[3].isActive){
+                            gameOver = true;
+                        }
+                    }
+                    ships[i].die();
                 }
-                //a not very effective way of stopping ship from moving after respawning
-                for(bool &button: buttonsDown){
-                    button = false;
-                }
-                p1.die();
             }
         }
+        
+        
+        
     
         //update bullets
         for(list<bullet>::iterator b = bullets.begin(); b!=bullets.end();){
@@ -239,21 +316,38 @@ void asteroidsApp::update()
             }
         }
     }else{
+        //menu interface
         menuDelay --;
-        if(buttonsDown[4] && menuDelay <= 0){
+        if(buttonsDown[0][4] && menuDelay <= 0){
             if(startScreen){
                 startScreen = false;
-                buttonsDown[4] = false;
+                buttonsDown[0][4] = false;
+                for(int i = 0; i <numPlayers; i++){
+                    ships[i] = ship();
+                }
             }else if(gameOver){
                 gameOver = false;
                 startScreen = true;
-                ships.clear();
                 bullets.clear();
-                p1 = ship();
-                ships.push_back(p1);
                 ac = asteroidControl(getShipsPos());
-                buttonsDown[4] = false;
+                buttonsDown[0][4] = false;
                 menuDelay = 100;
+                numPlayers = 1;
+            }
+        }
+        if(startScreen){
+            if(buttonsDown[0][2]){
+                numPlayers ++;
+                if(numPlayers > 4){
+                    numPlayers = 1;
+                }
+                buttonsDown[0][2] = false;
+            }else if(buttonsDown[0][3]){
+                numPlayers --;
+                if(numPlayers < 1){
+                    numPlayers = 4;
+                }
+                buttonsDown[0][3] = false;
             }
         }
     }
@@ -262,51 +356,32 @@ void asteroidsApp::update()
 void asteroidsApp::draw()
 {
 	gl::clear( Color( 0, 0, 0 ) );
-    p1.draw();
+    for(int i = 0; i < numPlayers; i++){
+        ships[i].draw();
+    }
     ac.draw();
     for(bullet &b: bullets){
         b.draw();
     }
-    gl::pushMatrices();
-    scoreBoard.text("lives: " + to_string(p1.lives)).alignment(TextBox::LEFT);
-    gl::translate(vec2(getWindowWidth()/4,0));
-    gl::draw(gl::Texture2d::create(scoreBoard.render()));
-    gl::translate(vec2(getWindowWidth()/4,0));
-    scoreBoard.text("score: " + to_string(p1.score)).alignment(TextBox::RIGHT);
-    gl::draw(gl::Texture2d::create(scoreBoard.render()));
-    gl::popMatrices();
-    if(startScreen){
-        title.text("a s t e r o i d s");
-        gl::pushMatrices();
-        gl::translate(vec2(0,getWindowHeight()/3 + 50));
-        gl::draw(gl::Texture2d::create(title.render()));
-        gl::translate(vec2(0,100));
-        spaceContinue.text("----press space to start----");
-        gl::draw(gl::Texture2d::create(spaceContinue.render()));
-        gl::popMatrices();
-    }
-    if(gameOver){
-        title.text("g a m e   o v e r");
-        gl::pushMatrices();
-        gl::translate(vec2(0,getWindowHeight()/3 + 50));
-        gl::draw(gl::Texture2d::create(title.render()));
-        gl::translate(vec2(0,100));
-        spaceContinue.text("----press space to continue----");
-        gl::draw(gl::Texture2d::create(spaceContinue.render()));
-        gl::popMatrices();
-    }
+    drawInterface();
 }
 
-list<vec2> asteroidsApp::getShipsPos(){
+list<vec2> asteroidsApp::getShipsPos()
+{
     list<vec2> r;
-    vector<vec2> points = p1.body.getPoints();
-    for(vec2 p: points){
-        r.push_back(p);
+    
+    for(int i = 0; i < numPlayers; i++){
+        vector<vec2> points = ships[i].body.getPoints();
+        for(vec2 p: points){
+            r.push_back(p);
+        }
     }
+
     return r;
 }
 
-list<vec2> asteroidsApp::getBulletsPos(){
+list<vec2> asteroidsApp::getBulletsPos()
+{
     list<vec2> buls;
     for(bullet &b : bullets){
         buls.push_back(b.pos);
@@ -314,4 +389,45 @@ list<vec2> asteroidsApp::getBulletsPos(){
     return buls;
 }
 
-CINDER_APP( asteroidsApp, RendererGl )
+void asteroidsApp::drawInterface()
+{
+    if(!startScreen && !gameOver){
+        gl::pushMatrices();
+        scoreBoard.text("lives: " + to_string(ships[0].lives)).alignment(TextBox::LEFT);
+        gl::translate(vec2(getWindowWidth()/4,0));
+        gl::draw(gl::Texture2d::create(scoreBoard.render()));
+        gl::translate(vec2(getWindowWidth()/4,0));
+        scoreBoard.text("score: " + to_string(ships[0].score)).alignment(TextBox::RIGHT);
+        gl::draw(gl::Texture2d::create(scoreBoard.render()));
+        gl::popMatrices();
+    }else if(startScreen){
+        title.text("a s t e r o i d s");
+        gl::pushMatrices();
+        gl::translate(vec2(0,getWindowHeight()/4 + 50));
+        gl::draw(gl::Texture2d::create(title.render()));
+        gl::translate(vec2(0,150));
+        spaceContinue.text("players: " + to_string(numPlayers));
+        gl::draw(gl::Texture2d::create(spaceContinue.render()));
+        gl::translate(vec2(0,100));
+        if(menuDelay <= 0){
+            spaceContinue.text("----press space to start----");
+            gl::draw(gl::Texture2d::create(spaceContinue.render()));
+        }
+        gl::popMatrices();
+    }else if(gameOver){
+        title.text("g a m e   o v e r");
+        gl::pushMatrices();
+        gl::translate(vec2(0,getWindowHeight()/3 + 50));
+        gl::draw(gl::Texture2d::create(title.render()));
+        gl::translate(vec2(0,100));
+        if(menuDelay <= 0){
+            spaceContinue.text("----press space to continue----");
+            gl::draw(gl::Texture2d::create(spaceContinue.render()));
+        }
+        gl::popMatrices();
+    }
+
+    
+}
+
+CINDER_APP( asteroidsApp, RendererGl(RendererGl::Options().msaa(4)))

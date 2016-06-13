@@ -24,11 +24,17 @@ ship::ship()
     size = 15;
     score = 0;
     invincible = 100;
+    isActive = true;
+    bulletDelay = 0;
 }
 
 ship::ship(vec2 pos)
 {
     
+}
+
+ship::ship(bool active){
+    isActive = active;
 }
 
 void ship::draw()
@@ -59,50 +65,57 @@ void ship::move(bool buttons[])
 
 void ship::update()
 {
-    if(invincible >= 0){
-        invincible --;
+    if(isActive){
+        
+    
+        if(invincible >= 0){
+            invincible --;
+        }
+        //turn ship
+        forward = forward * mat2(cos(turning), -sin(turning), sin(turning), cos(turning));
+        forward = normalize(forward);
+        turning = 0;
+    
+    
+        //adjust acceleration
+        vec2 newVel = forwardMotion * forward;
+        forwardMotion = 0;
+    
+    
+        //limit max speed
+        if(length(velocity) > 3){
+            vec2 velDir = normalize(velocity);
+            velocity = velDir * 3.0f;
+        }
+    
+    
+        //apply current velocity and drag
+        velocity += newVel;
+        if(length(velocity) > 0){
+            velocity = velocity / drag;
+        }
+    
+        //adjust position
+        center += velocity;
+    
+    
+        //check to see if off screen, wrap to other side
+        if(center.x < 0){
+            center.x = getWindowWidth() + (size / 2);
+        }else if(center.x > getWindowWidth() + (size / 2)){
+            center.x = 0;
+        }
+        if(center.y < 0){
+            center.y = getWindowHeight() + (size / 2);
+        }else if(center.y > getWindowHeight() + (size / 2)){
+            center.y = 0;
+        }
+    
+        constructBody();
+        
+    }else{
+        center = vec2(10000);
     }
-    //turn ship
-    forward = forward * mat2(cos(turning), -sin(turning), sin(turning), cos(turning));
-    forward = normalize(forward);
-    turning = 0;
-    
-    
-    //adjust acceleration
-    vec2 newVel = forwardMotion * forward;
-    forwardMotion = 0;
-    
-    
-    //limit max speed
-    if(length(velocity) > 3){
-        vec2 velDir = normalize(velocity);
-        velocity = velDir * 3.0f;
-    }
-    
-    
-    //apply current velocity and drag
-    velocity += newVel;
-    if(length(velocity) > 0){
-        velocity = velocity / drag;
-    }
-    
-    //adjust position
-    center += velocity;
-    
-    
-    //check to see if off screen, wrap to other side
-    if(center.x < 0){
-        center.x = getWindowWidth() + (size / 2);
-    }else if(center.x > getWindowWidth() + (size / 2)){
-        center.x = 0;
-    }
-    if(center.y < 0){
-        center.y = getWindowHeight() + (size / 2);
-    }else if(center.y > getWindowHeight() + (size / 2)){
-        center.y = 0;
-    }
-    
-    constructBody();
 }
 
 
