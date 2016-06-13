@@ -43,7 +43,9 @@ void ship::draw()
     if(invincible > 0){
         gl::color(.5,.5,.5);
     }
-    gl::draw(body);
+    if(isActive){
+        gl::draw(body);
+    }
 }
 
 void ship::move(bool buttons[])
@@ -136,9 +138,8 @@ void ship::die()
         invincible = 150;
         if(lives < 0){
             //move offscreen?
-            //wait until new game, other ships could still be playing 
-            score = 0;
-            lives = 5;
+            //wait until new game, other ships could still be playing
+            isActive = false;
         }
     
 }

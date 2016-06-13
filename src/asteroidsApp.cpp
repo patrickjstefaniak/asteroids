@@ -36,7 +36,7 @@ void asteroidsApp::setup()
     setWindowSize(800, 600);
     ac = asteroidControl(getShipsPos());
     spaceContinue = TextBox().font(Font("Courier" , 30)).size(vec2(getWindowWidth(), 50)).alignment(TextBox::CENTER);
-    scoreBoard = TextBox().font(Font("Courier", 15)).size(vec2(getWindowWidth()/4, 50));
+    scoreBoard = TextBox().font(Font("Courier", 15)).size(vec2(getWindowWidth()/4, 50)).alignment(TextBox::LEFT);
     title = TextBox().font(Font("Courier", 70)).size(vec2(getWindowWidth(),100)).alignment(TextBox::CENTER);
     for(int x = 0; x < 4; x++){
         for(int y = 0; y < 5; y++){
@@ -259,7 +259,7 @@ void asteroidsApp::update()
             if(ships[i].bulletDelay > 0){
                 ships[i].bulletDelay --;
             }
-            if(buttonsDown[i][4] && ships[i].bulletDelay <= 0){
+            if(buttonsDown[i][4] && ships[i].bulletDelay <= 0 && ships[i].isActive){
                 bullet b = bullet(ships[i]);
                 bullets.push_back(b);
                 ships[i].bulletDelay = 50;
@@ -292,8 +292,9 @@ void asteroidsApp::update()
                         if(p == h){
                             if(ships[i].lives == 0){
                                 ships[i].isActive = false;
+                            }else{
+                                ships[i].die();
                             }
-                            ships[i].die();
                         }
                     }
                 }
@@ -303,6 +304,7 @@ void asteroidsApp::update()
         //see if game over
         if(!ships[0].isActive && !ships[1].isActive && !ships[2].isActive && !ships[3].isActive){
             gameOver = true;
+            menuDelay = 100;
         }
         
     
@@ -361,12 +363,14 @@ void asteroidsApp::update()
 void asteroidsApp::draw()
 {
 	gl::clear( Color( 0, 0, 0 ) );
-    for(int i = 0; i < numPlayers; i++){
-        ships[i].draw();
-    }
-    ac.draw();
-    for(bullet &b: bullets){
-        b.draw();
+    if(!startScreen && !gameOver){
+        for(int i = 0; i < numPlayers; i++){
+            ships[i].draw();
+        }
+        ac.draw();
+        for(bullet &b: bullets){
+            b.draw();
+        }
     }
     drawInterface();
 }
@@ -410,27 +414,30 @@ void asteroidsApp::drawInterface()
             gl::draw(gl::Texture2d::create(spaceContinue.render()));
         }
         gl::popMatrices();
-    }else if(gameOver){
-        title.text("g a m e   o v e r");
-        gl::pushMatrices();
-        gl::translate(vec2(0,getWindowHeight()/3 + 50));
-        gl::draw(gl::Texture2d::create(title.render()));
-        gl::translate(vec2(0,100));
-        if(menuDelay <= 0){
-            spaceContinue.text("----press space to continue----");
-            gl::draw(gl::Texture2d::create(spaceContinue.render()));
-        }
-        gl::popMatrices();
     }else{
         gl::pushMatrices();
-        scoreBoard.text("p1 - lives: " + to_string(ships[0].lives) +
-                        "\n     score: " + to_string(ships[0].score)).alignment(TextBox::LEFT);
-        gl::translate(vec2(getWindowWidth()/4,0));
-        gl::draw(gl::Texture2d::create(scoreBoard.render()));
+        gl::translate(vec2(-70, 0));
+        for(int i = 0; i < numPlayers; i ++){
+            scoreBoard.text("p" + to_string(i+1) + " - lives: " + to_string(ships[i].lives) +
+                            "\n     score: " + to_string(ships[i].score));
+            gl::translate(vec2(getWindowWidth() * 1/(numPlayers+1), 0));
+            gl::draw(gl::Texture2d::create(scoreBoard.render()));
+        }
         gl::popMatrices();
+        
+        if(gameOver){
+            title.text("g a m e   o v e r");
+            gl::pushMatrices();
+            gl::translate(vec2(0,getWindowHeight()/3 + 50));
+            gl::draw(gl::Texture2d::create(title.render()));
+            gl::translate(vec2(0,100));
+            if(menuDelay <= 0){
+                spaceContinue.text("----press space to continue----");
+                gl::draw(gl::Texture2d::create(spaceContinue.render()));
+            }
+            gl::popMatrices();
+        }
     }
-
-    
 }
 
 CINDER_APP( asteroidsApp, RendererGl(RendererGl::Options().msaa(4)))

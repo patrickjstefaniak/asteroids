@@ -78,7 +78,7 @@ void asteroidControl::createAsteroids(int num){
     while(num > 0){
         vec2 a = vec2(rand() % getWindowWidth(), rand() % getWindowHeight());
         for(vec2 i: shipPos){
-            while(distance(i, a) < 100){
+            while(distance(i, a) < 200){
                 a = vec2(rand() % getWindowWidth(), rand() % getWindowHeight());
             }
         }
