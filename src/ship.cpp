@@ -6,13 +6,16 @@
 //
 //
 
+//if asteroid is on top of ship when it respawns then it takes off multiple lives
+//is it calling die() multiple times before resetting the invincibility ?
+
 #include "ship.h"
 
 ship::ship()
 {
     forward = vec2(0,-1);
     drag = 1.009;
-    lives = 5;
+    lives = 3;
     center = getWindowCenter();
     velocity = vec2(0);
     turning = 0;
@@ -20,7 +23,7 @@ ship::ship()
     forwardMotion = 0;
     size = 15;
     score = 0;
-    invincible = 50;
+    invincible = 100;
 }
 
 ship::ship(vec2 pos)
@@ -56,7 +59,7 @@ void ship::move(bool buttons[])
 
 void ship::update()
 {
-    if(invincible > 0){
+    if(invincible >= 0){
         invincible --;
     }
     //turn ship
@@ -112,17 +115,19 @@ void ship::die()
 {
     //period after restarting so that ship doesnt start on
     //top of asteroid or get immediately hit by one
-    if(invincible <= 0){
+    
         center = getWindowCenter();
         lives -= 1;
         velocity = vec2(0);
         forward = vec2(0,-1);
         invincible = 150;
         if(lives < 0){
+            //move offscreen?
+            //wait until new game, other ships could still be playing 
             score = 0;
             lives = 5;
         }
-    }
+    
 }
 
 void ship::constructBody()
