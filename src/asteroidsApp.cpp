@@ -36,7 +36,7 @@ void asteroidsApp::setup()
     setWindowSize(800, 600);
     ac = asteroidControl(getShipsPos());
     spaceContinue = TextBox().font(Font("Courier" , 30)).size(vec2(getWindowWidth(), 50)).alignment(TextBox::CENTER);
-    scoreBoard = TextBox().font(Font("Courier", 20)).size(vec2(getWindowWidth()/4, 50));
+    scoreBoard = TextBox().font(Font("Courier", 15)).size(vec2(getWindowWidth()/4, 50));
     title = TextBox().font(Font("Courier", 70)).size(vec2(getWindowWidth(),100)).alignment(TextBox::CENTER);
     for(int x = 0; x < 4; x++){
         for(int y = 0; y < 5; y++){
@@ -256,10 +256,10 @@ void asteroidsApp::update()
         
         //bulletDelay to prevent from being able to hold down button and create lots of bullets
         for(int i = 0; i < numPlayers; i++){
-            if(ships[i].bulletDelay < 0){
+            if(ships[i].bulletDelay > 0){
                 ships[i].bulletDelay --;
             }
-            if(buttonsDown[i][0] && ships[i].bulletDelay <= 0){
+            if(buttonsDown[i][4] && ships[i].bulletDelay <= 0){
                 bullet b = bullet(ships[i]);
                 bullets.push_back(b);
                 ships[i].bulletDelay = 50;
@@ -272,7 +272,6 @@ void asteroidsApp::update()
         for(int i = 0; i < numPlayers; i++){
             ships[i].update();
         }
-        ac.shipPos = getShipsPos();
     
         //see if any asteroids were hit
         //ac.update returns list of asteroids hit by bullets
@@ -288,20 +287,23 @@ void asteroidsApp::update()
         //see if ship is hit by asteroid
         for(vec2 &h : hits.back()){
             for(int i = 0; i < numPlayers; i++){
-                if(ships[i].invincible <= 0 && ships[i].body.contains(h)){
-                    if(ships[i].lives == 0){
-                        ships[i].isActive = false;
-                        //see if game over
-                        if(!ships[0].isActive && !ships[1].isActive && !ships[2].isActive && !ships[3].isActive){
-                            gameOver = true;
+                if(ships[i].invincible <= 0){
+                    for(vec2 p: ships[i].body.getPoints()){
+                        if(p == h){
+                            if(ships[i].lives == 0){
+                                ships[i].isActive = false;
+                            }
+                            ships[i].die();
                         }
                     }
-                    ships[i].die();
                 }
             }
         }
         
-        
+        //see if game over
+        if(!ships[0].isActive && !ships[1].isActive && !ships[2].isActive && !ships[3].isActive){
+            gameOver = true;
+        }
         
     
         //update bullets
@@ -322,8 +324,11 @@ void asteroidsApp::update()
             if(startScreen){
                 startScreen = false;
                 buttonsDown[0][4] = false;
-                for(int i = 0; i <numPlayers; i++){
+                for(int i = 0; i < numPlayers; i++){
                     ships[i] = ship();
+                }
+                for(int i = numPlayers ; i < 4; i++){
+                    ships[i] = ship(false);
                 }
             }else if(gameOver){
                 gameOver = false;
@@ -391,16 +396,7 @@ list<vec2> asteroidsApp::getBulletsPos()
 
 void asteroidsApp::drawInterface()
 {
-    if(!startScreen && !gameOver){
-        gl::pushMatrices();
-        scoreBoard.text("lives: " + to_string(ships[0].lives)).alignment(TextBox::LEFT);
-        gl::translate(vec2(getWindowWidth()/4,0));
-        gl::draw(gl::Texture2d::create(scoreBoard.render()));
-        gl::translate(vec2(getWindowWidth()/4,0));
-        scoreBoard.text("score: " + to_string(ships[0].score)).alignment(TextBox::RIGHT);
-        gl::draw(gl::Texture2d::create(scoreBoard.render()));
-        gl::popMatrices();
-    }else if(startScreen){
+    if(startScreen){
         title.text("a s t e r o i d s");
         gl::pushMatrices();
         gl::translate(vec2(0,getWindowHeight()/4 + 50));
@@ -424,6 +420,13 @@ void asteroidsApp::drawInterface()
             spaceContinue.text("----press space to continue----");
             gl::draw(gl::Texture2d::create(spaceContinue.render()));
         }
+        gl::popMatrices();
+    }else{
+        gl::pushMatrices();
+        scoreBoard.text("p1 - lives: " + to_string(ships[0].lives) +
+                        "\n     score: " + to_string(ships[0].score)).alignment(TextBox::LEFT);
+        gl::translate(vec2(getWindowWidth()/4,0));
+        gl::draw(gl::Texture2d::create(scoreBoard.render()));
         gl::popMatrices();
     }
 
