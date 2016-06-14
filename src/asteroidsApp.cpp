@@ -18,6 +18,9 @@ class asteroidsApp : public App {
 	void update() override;
 	void draw() override;
     void drawInterface();
+    void switchSet(KeyEvent event, bool on);
+    
+    enum Control { RIGHT = 0, LEFT, UP, DOWN, SHOOT };
     
     list<vec2> getShipsPos();
     list<vec2> getBulletsPos();
@@ -61,188 +64,108 @@ void asteroidsApp::mouseDown( MouseEvent event )
 //3 = down  | s | g | k
 //4 = space | e | y | o
 
-void asteroidsApp::keyDown(KeyEvent event)
-{
+void asteroidsApp::switchSet(KeyEvent event, bool on){
     switch (event.getCode()) {
             //p1
         case KeyEvent::KEY_RIGHT:
-            buttonsDown[0][0] = true;
+            buttonsDown[0][RIGHT] = on;
             break;
             
         case KeyEvent::KEY_LEFT:
-            buttonsDown[0][1] = true;
+            buttonsDown[0][LEFT] = on;
             break;
             
         case KeyEvent::KEY_UP:
-            buttonsDown[0][2] = true;
+            buttonsDown[0][UP] = on;
             break;
             
         case KeyEvent::KEY_DOWN:
-            buttonsDown[0][3] = true;
+            buttonsDown[0][DOWN] = on;
             break;
             
         case KeyEvent::KEY_SPACE:
-            buttonsDown[0][4] = true;
+            buttonsDown[0][SHOOT] = on;
             break;
             
             //p2
         case KeyEvent::KEY_d:
-            buttonsDown[1][0] = true;
+            buttonsDown[1][0] = on;
             break;
             
         case KeyEvent::KEY_a:
-            buttonsDown[1][1] = true;
+            buttonsDown[1][1] = on;
             break;
             
         case KeyEvent::KEY_w:
-            buttonsDown[1][2] = true;
+            buttonsDown[1][2] = on;
             break;
             
         case KeyEvent::KEY_s:
-            buttonsDown[1][3] = true;
+            buttonsDown[1][3] = on;
             break;
             
         case KeyEvent::KEY_e:
-            buttonsDown[1][4] = true;
+            buttonsDown[1][4] = on;
             break;
             
             //p3
         case KeyEvent::KEY_h:
-            buttonsDown[2][0] = true;
+            buttonsDown[2][0] = on;
             break;
             
         case KeyEvent::KEY_f:
-            buttonsDown[2][1] = true;
+            buttonsDown[2][1] = on;
             break;
             
         case KeyEvent::KEY_t:
-            buttonsDown[2][2] = true;
+            buttonsDown[2][2] = on;
             break;
             
         case KeyEvent::KEY_g:
-            buttonsDown[2][3] = true;
+            buttonsDown[2][3] = on;
             break;
             
         case KeyEvent::KEY_y:
-            buttonsDown[2][4] = true;
+            buttonsDown[2][4] = on;
             break;
             
             //p4
         case KeyEvent::KEY_l:
-            buttonsDown[3][0] = true;
+            buttonsDown[3][0] = on;
             break;
             
         case KeyEvent::KEY_j:
-            buttonsDown[3][1] = true;
+            buttonsDown[3][1] = on;
             break;
             
         case KeyEvent::KEY_i:
-            buttonsDown[3][2] = true;
+            buttonsDown[3][2] = on;
             break;
             
         case KeyEvent::KEY_k:
-            buttonsDown[3][3] = true;
+            buttonsDown[3][3] = on;
             break;
             
         case KeyEvent::KEY_o:
-            buttonsDown[3][4] = true;
+            buttonsDown[3][4] = on;
             break;
             
             
         default:
             break;
     }
+
 }
 
-void asteroidsApp::keyUp(KeyEvent event){
-    switch (event.getCode()) {
-            //p1
-        case KeyEvent::KEY_RIGHT:
-            buttonsDown[0][0] = false;
-            break;
-            
-        case KeyEvent::KEY_LEFT:
-            buttonsDown[0][1] = false;
-            break;
-            
-        case KeyEvent::KEY_UP:
-            buttonsDown[0][2] = false;
-            break;
-            
-        case KeyEvent::KEY_DOWN:
-            buttonsDown[0][3] = false;
-            break;
-            
-        case KeyEvent::KEY_SPACE:
-            buttonsDown[0][4] = false;
-            break;
-            
-            //p2
-        case KeyEvent::KEY_d:
-            buttonsDown[1][0] = false;
-            break;
-            
-        case KeyEvent::KEY_a:
-            buttonsDown[1][1] = false;
-            break;
-            
-        case KeyEvent::KEY_w:
-            buttonsDown[1][2] = false;
-            break;
-            
-        case KeyEvent::KEY_s:
-            buttonsDown[1][3] = false;
-            break;
-            
-        case KeyEvent::KEY_e:
-            buttonsDown[1][4] = false;
-            break;
-            
-            //p3
-        case KeyEvent::KEY_h:
-            buttonsDown[2][0] = false;
-            break;
-            
-        case KeyEvent::KEY_f:
-            buttonsDown[2][1] = false;
-            break;
-            
-        case KeyEvent::KEY_t:
-            buttonsDown[2][2] = false;
-            break;
-            
-        case KeyEvent::KEY_g:
-            buttonsDown[2][3] = false;
-            break;
-            
-        case KeyEvent::KEY_y:
-            buttonsDown[2][4] = false;
-            break;
-            
-            //p4
-        case KeyEvent::KEY_l:
-            buttonsDown[3][0] = false;
-            break;
-            
-        case KeyEvent::KEY_j:
-            buttonsDown[3][1] = false;
-            break;
-            
-        case KeyEvent::KEY_i:
-            buttonsDown[3][2] = false;
-            break;
-            
-        case KeyEvent::KEY_k:
-            buttonsDown[3][3] = false;
-            break;
-            
-        case KeyEvent::KEY_o:
-            buttonsDown[3][4] = false;
-            break;
-            
-        default:
-            break;
-    }
+
+void asteroidsApp::keyDown(KeyEvent event)
+{
+    switchSet(event, true);
+}
+
+void asteroidsApp::keyUp(KeyEvent event)
+{
+    switchSet(event, false);
 }
 
 void asteroidsApp::update()
@@ -259,11 +182,11 @@ void asteroidsApp::update()
             if(ships[i].bulletDelay > 0){
                 ships[i].bulletDelay --;
             }
-            if(buttonsDown[i][4] && ships[i].bulletDelay <= 0 && ships[i].isActive){
+            if(buttonsDown[i][SHOOT] && ships[i].bulletDelay <= 0 && ships[i].isActive){
                 bullet b = bullet(ships[i]);
                 bullets.push_back(b);
                 ships[i].bulletDelay = 50;
-            }else if(!buttonsDown[i][4]){
+            }else if(!buttonsDown[i][SHOOT]){
                 ships[i].bulletDelay = 0;
             }
         }
@@ -322,10 +245,10 @@ void asteroidsApp::update()
     }else{
         //menu interface
         menuDelay --;
-        if(buttonsDown[0][4] && menuDelay <= 0){
+        if(buttonsDown[0][SHOOT] && menuDelay <= 0){
             if(startScreen){
                 startScreen = false;
-                buttonsDown[0][4] = false;
+                buttonsDown[0][SHOOT] = false;
                 for(int i = 0; i < numPlayers; i++){
                     ships[i] = ship();
                 }
@@ -337,24 +260,24 @@ void asteroidsApp::update()
                 startScreen = true;
                 bullets.clear();
                 ac = asteroidControl(getShipsPos());
-                buttonsDown[0][4] = false;
+                buttonsDown[0][SHOOT] = false;
                 menuDelay = 100;
                 numPlayers = 1;
             }
         }
         if(startScreen){
-            if(buttonsDown[0][2]){
+            if(buttonsDown[0][UP]){
                 numPlayers ++;
                 if(numPlayers > 4){
                     numPlayers = 1;
                 }
-                buttonsDown[0][2] = false;
-            }else if(buttonsDown[0][3]){
+                buttonsDown[0][UP] = false;
+            }else if(buttonsDown[0][DOWN]){
                 numPlayers --;
                 if(numPlayers < 1){
                     numPlayers = 4;
                 }
-                buttonsDown[0][3] = false;
+                buttonsDown[0][DOWN] = false;
             }
         }
     }
